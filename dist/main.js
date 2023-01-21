@@ -6,13 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
 const mongodb_1 = require("@fastify/mongodb");
 const env_1 = require("@fastify/env");
+const cors_1 = require("@fastify/cors");
 const app_1 = require("./app");
 const server = (0, fastify_1.default)({ logger: true });
 server.get('/ping', async (request, reply) => {
     var _a;
     // return 'pong\n';
-    reply.header("Access-Control-Allow-Origin", "*");
-    reply.header("Access-Control-Allow-Methods", "GET");
     const users = await ((_a = server.mongo.db) === null || _a === void 0 ? void 0 : _a.collection('user').find().toArray());
     console.log('found', users ? users[0] : []);
     reply.send(users);
@@ -37,6 +36,7 @@ const options = {
 };
 const init = async () => {
     server.register(env_1.fastifyEnv, options);
+    server.register(cors_1.fastifyCors);
     await server.after();
     const username = encodeURIComponent(server.config.DB_USERNAME);
     const password = encodeURIComponent(server.config.DB_PASSWORD);

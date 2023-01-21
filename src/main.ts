@@ -1,15 +1,13 @@
 import fastify from 'fastify';
 import {fastifyMongodb} from '@fastify/mongodb';
 import {fastifyEnv} from '@fastify/env';
+import { fastifyCors } from '@fastify/cors';
 import { App } from './app';
 
 const server = fastify({logger: true});
 
 server.get('/ping', async (request, reply) => {
     // return 'pong\n';
-    reply.header("Access-Control-Allow-Origin", "*");
-    reply.header("Access-Control-Allow-Methods", "GET");
-    reply.header("Access-Control-Allow-Headers", "GET");
     const users = await server.mongo.db?.collection('user').find().toArray();
     console.log('found', users ? users[0] : []);
     reply.send(users);
@@ -37,6 +35,7 @@ const options = {
 
 const init = async () => {
     server.register(fastifyEnv, options);
+    server.register(fastifyCors);
     await server.after();
     const username = encodeURIComponent(server.config.DB_USERNAME);
     const password = encodeURIComponent(server.config.DB_PASSWORD);
