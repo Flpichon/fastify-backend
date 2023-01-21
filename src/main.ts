@@ -7,8 +7,11 @@ const server = fastify({logger: true});
 
 server.get('/ping', async (request, reply) => {
     // return 'pong\n';
+    reply.header("Access-Control-Allow-Origin", "*");
+    reply.header("Access-Control-Allow-Methods", "GET");
     const users = await server.mongo.db?.collection('user').find().toArray();
-    console.log(users);
+    console.log('found', users ? users[0] : []);
+    reply.send(users);
 });
 
 const schema = {
