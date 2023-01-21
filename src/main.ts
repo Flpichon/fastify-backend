@@ -9,6 +9,7 @@ server.get('/ping', async (request, reply) => {
     // return 'pong\n';
     reply.header("Access-Control-Allow-Origin", "*");
     reply.header("Access-Control-Allow-Methods", "GET");
+    reply.header("Access-Control-Allow-Headers", "GET");
     const users = await server.mongo.db?.collection('user').find().toArray();
     console.log('found', users ? users[0] : []);
     reply.send(users);
