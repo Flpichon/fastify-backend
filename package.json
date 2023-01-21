@@ -4,8 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "npm run build && node ./dist/main.js"
+    "start": "npm run build && node ./dist/main.js",
+    "build": "tsc -p tsconfig.json"
   },
   "repository": {
     "type": "git",
