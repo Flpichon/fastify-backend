@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import {fastifyMongodb} from '@fastify/mongodb';
 import {fastifyEnv} from '@fastify/env';
 import { fastifyCors } from '@fastify/cors';
+import {fastifyAuth} from '@fastify/auth';
 import { App } from './app';
 
 const server = fastify({logger: true});
@@ -32,6 +33,10 @@ const options = {
     dotenv: true,
     data: process.env
 };
+const authenticate = { realm: 'Westeros' };
+const validate = async (username: string, password: string, req: any, reply: any) => {
+
+} 
 
 const init = async () => {
     server.register(fastifyEnv, options);
