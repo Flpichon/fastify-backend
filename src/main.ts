@@ -10,7 +10,7 @@ server.get('/ping', async (request, reply) => {
     // return 'pong\n';
     const users = await server.mongo.db?.collection('user').find().toArray();
     console.log('found', users ? users[0] : []);
-    reply.send({1 : users, 2 : 'coucou'});
+    reply.send(users);
 });
 
 const schema = {
