@@ -55,6 +55,7 @@ init();
         await server.ready();
         await server.listen({port: 8080});
         new App(server);
+        console.log('serveur listening');
         
     } catch(error) {
         console.error(error);
