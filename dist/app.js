@@ -5,5 +5,9 @@ class App {
     constructor(server) {
         const db = server.mongo.db;
     }
+    loginServ() {
+        console.log('yo pi');
+    }
+    ;
 }
 exports.App = App;

@@ -2,17 +2,11 @@ import fastify from 'fastify';
 import {fastifyMongodb} from '@fastify/mongodb';
 import {fastifyEnv} from '@fastify/env';
 import { fastifyCors } from '@fastify/cors';
-import {fastifyAuth} from '@fastify/auth';
+import { fastifyAuth } from '@fastify/auth';
 import { App } from './app';
+import { Routes } from './routes';
 
 const server = fastify({logger: true});
-
-server.get('/ping', async (request, reply) => {
-    // return 'pong\n';
-    const users = await server.mongo.db?.collection('user').find().toArray();
-    console.log('found', users ? users[0] : []);
-    reply.send(users);
-});
 
 const schema = {
     type: 'object',
@@ -33,24 +27,33 @@ const options = {
     dotenv: true,
     data: process.env
 };
+
 const authenticate = { realm: 'Westeros' };
 const validate = async (username: string, password: string, req: any, reply: any) => {
-
+    console.log('validate')
 } 
 
 const init = async () => {
-    server.register(fastifyEnv, options);
     server.register(fastifyCors);
+    server.register(fastifyEnv, options);
     await server.after();
     const username = encodeURIComponent(server.config.DB_USERNAME);
     const password = encodeURIComponent(server.config.DB_PASSWORD);
     const dataBaseName = 'react-data';
-
+    
     const url = `mongodb+srv://${username}:${password}@cluster0.pb73pcs.mongodb.net/${dataBaseName}?retryWrites=true&w=majority`;
     server.register(fastifyMongodb, {
         forceClose: true,
         url
     });
+    await server.after();
+    const app = new App(server);
+    server.decorate('asyncVerifyUserAndPassword', async (request: any, reply: any) => {
+        app.loginServ();
+    });
+    server.register(fastifyAuth);
+    await server.after();
+    const routes = new Routes(server);
 };
 
 init();
@@ -59,7 +62,6 @@ init();
     try {
         await server.ready();
         await server.listen({port: 8080});
-        new App(server);
         console.log('serveur listening');
         
     } catch(error) {

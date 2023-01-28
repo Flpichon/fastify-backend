@@ -7,15 +7,10 @@ const fastify_1 = __importDefault(require("fastify"));
 const mongodb_1 = require("@fastify/mongodb");
 const env_1 = require("@fastify/env");
 const cors_1 = require("@fastify/cors");
+const auth_1 = require("@fastify/auth");
 const app_1 = require("./app");
+const routes_1 = require("./routes");
 const server = (0, fastify_1.default)({ logger: true });
-server.get('/ping', async (request, reply) => {
-    var _a;
-    // return 'pong\n';
-    const users = await ((_a = server.mongo.db) === null || _a === void 0 ? void 0 : _a.collection('user').find().toArray());
-    console.log('found', users ? users[0] : []);
-    reply.send(users);
-});
 const schema = {
     type: 'object',
     required: ['DB_PASSWORD', 'DB_USERNAME'],
@@ -34,9 +29,13 @@ const options = {
     dotenv: true,
     data: process.env
 };
+const authenticate = { realm: 'Westeros' };
+const validate = async (username, password, req, reply) => {
+    console.log('validate');
+};
 const init = async () => {
-    server.register(env_1.fastifyEnv, options);
     server.register(cors_1.fastifyCors);
+    server.register(env_1.fastifyEnv, options);
     await server.after();
     const username = encodeURIComponent(server.config.DB_USERNAME);
     const password = encodeURIComponent(server.config.DB_PASSWORD);
@@ -46,13 +45,21 @@ const init = async () => {
         forceClose: true,
         url
     });
+    await server.after();
+    const app = new app_1.App(server);
+    server.decorate('asyncVerifyUserAndPassword', async (request, reply) => {
+        app.loginServ();
+    });
+    server.register(auth_1.fastifyAuth);
+    await server.after();
+    const routes = new routes_1.Routes(server);
 };
 init();
 (async () => {
     try {
         await server.ready();
         await server.listen({ port: 8080 });
-        new app_1.App(server);
+        console.log('serveur listening');
     }
     catch (error) {
         console.error(error);
