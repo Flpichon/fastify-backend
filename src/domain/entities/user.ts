@@ -3,18 +3,18 @@ export class User {
     name: string;
     mail: string;
     password: string;
-    tokens: string[];
+    token: string;
     constructor(
         rId: string,
         rName: string,
         rMail: string,
         rPassWord: string,
-        rTokens?: string[]
+        rToken?: string
     ) {
         this.id = rId;
         this.name = rName;
         this.mail = rMail;
         this.password = rPassWord;
-        this.tokens = rTokens ?? [];
+        this.token = rToken ?? '';
     }
 }

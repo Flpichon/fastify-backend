@@ -21,15 +21,14 @@ export class MgUserRepository implements IUserRepository {
         }
     }
 
-    async addToken(id: string, tokens: string[]): Promise<void> {
-        await this.mongodb.collection('user').updateOne({_id: new ObjectId(id)}, {$set: {tokens}});
+    async addToken(id: string, token: string): Promise<void> {
+        await this.mongodb.collection('user').updateOne({_id: new ObjectId(id)}, {$set: {token}});
     }
 
     async findByToken(id: string, token: string): Promise<User | undefined> {
-        console.log("🚀 ~ file: mgUser.repository.ts:33 ~ MgUserRepository ~ user ~ new ObjectId(id)", new ObjectId(id))
         const user = await this.mongodb.collection('user').findOne({
             _id: new ObjectId(id),
-            'tokens.0': token
+            token
         });
         if (user) {
             return new User(user._id.toString(), user.name, user.mail, user.password, user.tokens);

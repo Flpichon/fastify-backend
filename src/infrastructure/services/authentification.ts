@@ -11,8 +11,7 @@ export class Authentification {
     async generateToken(id: string): Promise<string> {
         const user = await this.UserRepository.findOne(id) as User;
         const token = jsonwebtoken.sign({_id: user.id}, process.env.JWT_SECRET as string, {expiresIn: '100d'});
-        const tokens = [...user.tokens, token];
-        await this.UserRepository.addToken(id, tokens);
+        await this.UserRepository.addToken(id, token);
         return token;
     }
 
