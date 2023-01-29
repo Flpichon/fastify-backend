@@ -29,10 +29,6 @@ const options = {
     dotenv: true,
     data: process.env
 };
-const authenticate = { realm: 'Westeros' };
-const validate = async (username, password, req, reply) => {
-    console.log('validate');
-};
 const init = async () => {
     server.register(cors_1.fastifyCors);
     server.register(env_1.fastifyEnv, options);
@@ -48,11 +44,37 @@ const init = async () => {
     await server.after();
     const app = new app_1.App(server);
     server.decorate('asyncVerifyUserAndPassword', async (request, reply) => {
-        app.loginServ();
+        try {
+            if (!request.body) {
+                throw new Error('username and Password is required!');
+            }
+            const user = await app.authService.findByCredentials(request.body.username, request.body.password);
+            request.user = user;
+        }
+        catch (error) {
+            reply.code(400).send(error);
+        }
+    });
+    server.decorate('asyncVerifyJWT', async (request, reply) => {
+        try {
+            if (!request.headers.authorization) {
+                throw new Error('No token was sent');
+            }
+            const token = request.headers.authorization.replace('Bearer ', '');
+            const user = await app.authService.findByToken(token);
+            if (!user) {
+                throw new Error('Authentication failed!');
+            }
+            request.user = user;
+            request.token = token;
+        }
+        catch (error) {
+            reply.code(401).send(error);
+        }
     });
     server.register(auth_1.fastifyAuth);
     await server.after();
-    const routes = new routes_1.Routes(server);
+    const routes = new routes_1.Routes(server, app.authService);
 };
 init();
 (async () => {

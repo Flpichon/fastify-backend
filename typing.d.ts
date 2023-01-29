@@ -3,25 +3,17 @@ import { ObjectId } from 'mongodb';
 export {};
 
 export interface FastifyMongoObject {
-    /**
-     * Mongo client instance
-     */
     client: MongoClient;
-    /**
-     * DB instance
-     */
-    db?: Db;
-    /**
-     * Mongo ObjectId class
-     */
+    export db?: Db;
     ObjectId: typeof ObjectId;
 }
-
-export type mongoFastify = FastifyMongoObject & FastifyMongoNestedObject;
 
 export interface FastifyMongoNestedObject {
     [name: string]: FastifyMongoObject;
 }
+
+export type mongoFastify = FastifyMongoObject & FastifyMongoNestedObject;
+
 declare module 'fastify' {
     interface FastifyInstance {
         config: {
@@ -29,5 +21,6 @@ declare module 'fastify' {
             DB_USERNAME: string;
         };
         asyncVerifyUserAndPassword: any;
+        asyncVerifyJWT: any;
     }
 }
