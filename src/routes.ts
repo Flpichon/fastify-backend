@@ -41,7 +41,7 @@ export class Routes {
 
     async login(request: any, reply: any): Promise<void> {
         const token = await this.auth.generateToken(request.user.id);
-        reply.send({ status: 'You are logged in', user: request.user });
+        reply.send({ status: 'You are logged in', user: request.user, token});
     }
 
     async profile(request: any, reply: any): Promise<void> {
