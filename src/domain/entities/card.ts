@@ -25,10 +25,10 @@ export class Card implements ICard {
     ) {
         this.id = data.id;
         this.title = data.title;
-        this.subtitle = data.subtitle ?? '';
-        this.imageSrc = data.imageSrc ?? '';
+        this.subtitle = data.subtitle ?? 'subtitle';
+        this.imageSrc = data.imageSrc ?? 'https://www.sofya.fr/_nuxt/img/logo-txt-white.c527c1a.png';
         this.descriptions = data.descriptions;
-        this.icon = data.icon ?? '';
+        this.icon = data.icon ?? 'icon';
     }
     
 }
