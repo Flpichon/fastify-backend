@@ -15,7 +15,7 @@ export class MgCardRepository implements ICardRepository {
             return new Card({
                 id: mgCard._id.toString(),
                 title: mgCard.title,
-                descriptions: mgCard.description,
+                descriptions: mgCard.descriptions,
                 subtitle: mgCard.subtitle,
                 icon: mgCard.icon,
                 imageSrc: mgCard.imageSrc
@@ -29,7 +29,7 @@ export class MgCardRepository implements ICardRepository {
             return new Card({
                 id: mgCard._id.toString(),
                 title: mgCard.title,
-                descriptions: mgCard.description,
+                descriptions: mgCard.descriptions,
                 subtitle: mgCard.subtitle,
                 icon: mgCard.icon,
                 imageSrc: mgCard.imageSrc
