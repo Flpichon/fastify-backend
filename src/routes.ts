@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
+import { App } from "./app";
 import { Authentification } from "./infrastructure/services/authentification";
 
 export class Routes {
     constructor(
         private readonly server: FastifyInstance,
-        private readonly auth: Authentification
+        private readonly app: App
     ) {
         this.server.route({
             method: 'GET',
@@ -27,9 +28,19 @@ export class Routes {
             method: [ 'GET', 'HEAD' ],
             url: '/profile',
             logLevel: 'warn',
-            preHandler: this.server.auth([ this.server.asyncVerifyJWT ]),
+            preHandler: this.server.auth([this.server.asyncVerifyJWT]),
             handler: async (req, reply) => {
                 await this.profile(req, reply);
+            }
+        });
+
+        this.server.route({
+            method: ['GET', 'HEAD'],
+            url: '/cards',
+            logLevel: 'warn',
+            preHandler: this.server.auth([this.server.asyncVerifyJWT]),
+            handler: async (req, reply) => {
+                await this.getCards(req, reply);
             }
         })
     }
@@ -40,11 +51,16 @@ export class Routes {
     }
 
     async login(request: any, reply: any): Promise<void> {
-        const token = await this.auth.generateToken(request.user.id);
+        const token = await this.app.authService.generateToken(request.user.id);
         reply.send({ status: 'You are logged in', user: request.user, token});
     }
 
     async profile(request: any, reply: any): Promise<void> {
         reply.send({ status: 'Authenticated!', user: request.user });
+    }
+
+    async getCards(request: any, reply: any): Promise<void> {
+        const cards = await this.app.cardUseCases.getCardList();
+        reply.send(cards);
     }
 }

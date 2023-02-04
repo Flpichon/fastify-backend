@@ -73,7 +73,7 @@ const init = async () => {
     });
     server.register(fastifyAuth);
     await server.after();
-    const routes = new Routes(server, app.authService);
+    const routes = new Routes(server, app);
 };
 
 init();
