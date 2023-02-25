@@ -2,8 +2,6 @@ import { ICardUpdatePayload } from "../../infrastructure/repositories/mgCard.rep
 import { Card } from "../entities/card";
 import { TMaybe } from "../entities/entity";
 
-
-
 export interface ICardRepository {
     create(payload: ICardUpdatePayload): Promise<string>;
     find(): Promise<Card[]>;

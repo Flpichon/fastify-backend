@@ -42,7 +42,17 @@ export class Routes {
             handler: async (req, reply) => {
                 await this.getCards(req, reply);
             }
-        })
+        });
+
+        this.server.route({
+            method: ['POST', 'HEAD'],
+            url: '/cards',
+            logLevel: 'warn',
+            preHandler: this.server.auth([this.server.asyncVerifyJWT]),
+            handler: async (req, reply) => {
+                await this.createCard(req, reply);
+            }
+        });
     }
 
     async ping(request: any, reply: any): Promise<void> {
@@ -62,5 +72,10 @@ export class Routes {
     async getCards(request: any, reply: any): Promise<void> {
         const cards = await this.app.cardUseCases.getCardList();
         reply.send(cards);
+    }
+
+    async createCard(request: any, reply: any): Promise<void> {
+        const cardId = await this.app.cardUseCases.createCard(request.body);
+        reply.send({cardId});
     }
 }
