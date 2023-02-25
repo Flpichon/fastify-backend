@@ -45,7 +45,7 @@ export class Routes {
         });
 
         this.server.route({
-            method: ['POST', 'HEAD'],
+            method: ['POST'],
             url: '/cards',
             logLevel: 'warn',
             preHandler: this.server.auth([this.server.asyncVerifyJWT]),
