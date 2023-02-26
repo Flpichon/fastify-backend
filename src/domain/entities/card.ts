@@ -28,7 +28,7 @@ export class Card implements ICard {
         this.subtitle = data.subtitle ?? 'subtitle';
         this.imageSrc = data.imageSrc ?? 'https://www.sofya.fr/_nuxt/img/logo-txt-white.c527c1a.png';
         this.descriptions = data.descriptions;
-        this.icon = data.icon ?? 'icon';
+        this.icon = data.icon ?? 'facebook';
     }
     
 }
