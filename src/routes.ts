@@ -60,7 +60,7 @@ export class Routes {
             logLevel: 'warn',
             preHandler: this.server.auth([this.server.asyncVerifyJWT]),
             handler: async (req, reply) => {
-                await this.createCard(req, reply);
+                await this.updateCard(req, reply);
             }
         });
 
