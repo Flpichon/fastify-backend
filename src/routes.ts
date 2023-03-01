@@ -55,7 +55,7 @@ export class Routes {
         });
 
         this.server.route({
-            method: ['PUT'],
+            method: ['PATCH'],
             url: '/cards/:id',
             logLevel: 'warn',
             preHandler: this.server.auth([this.server.asyncVerifyJWT]),
