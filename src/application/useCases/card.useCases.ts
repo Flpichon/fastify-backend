@@ -16,4 +16,12 @@ export class CardUseCases {
         return cardId;
     }
 
+    async updateCard(id: string, payload: ICardUpdatePayload): Promise<void> {
+        await this.CardRepository.updateOne(id, payload);
+    }
+
+    async removeCard(id: string): Promise<void> {
+        await this.CardRepository.deleteOne(id);
+    }
+
 }

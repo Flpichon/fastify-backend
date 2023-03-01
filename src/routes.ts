@@ -53,6 +53,26 @@ export class Routes {
                 await this.createCard(req, reply);
             }
         });
+
+        this.server.route({
+            method: ['PUT'],
+            url: '/cards/:id',
+            logLevel: 'warn',
+            preHandler: this.server.auth([this.server.asyncVerifyJWT]),
+            handler: async (req, reply) => {
+                await this.createCard(req, reply);
+            }
+        });
+
+        this.server.route({
+            method: ['DELETE'],
+            url: '/cards/:id',
+            logLevel: 'warn',
+            preHandler: this.server.auth([this.server.asyncVerifyJWT]),
+            handler: async (req, reply) => {
+                await this.removeCard(req, reply);
+            }
+        });
     }
 
     async ping(request: any, reply: any): Promise<void> {
@@ -77,5 +97,18 @@ export class Routes {
     async createCard(request: any, reply: any): Promise<void> {
         const cardId = await this.app.cardUseCases.createCard(request.body);
         reply.send({cardId});
+    }
+
+    async updateCard(request: any, reply: any): Promise<void> {
+        const { id } = request.params;
+        const data = request.body;
+        await this.app.cardUseCases.updateCard(id, data);
+        reply.send({sucess: true});
+    }
+
+    async removeCard(request: any, reply: any): Promise<void> {
+        const { id } = request.params;
+        await this.app.cardUseCases.removeCard(id);
+        reply.send({sucess: true});
     }
 }
